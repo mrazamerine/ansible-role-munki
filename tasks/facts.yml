@@ -1,0 +1,19 @@
+# Munki tasks - facts.yml
+---
+- name: create facts.d directory
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+
+- name: apply munki.fact template
+  template:
+    src: munki.fact.j2
+    dest: /etc/ansible/facts.d/munki.fact
+    mode: 0755
+  register: update_munki_facts
+
+- name: check local facts
+  setup:
+    fact_path: /etc/ansible/facts.d
+    filter: ansible_local*
+  when: update_munki_facts.changed

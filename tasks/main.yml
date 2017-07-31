@@ -1,0 +1,70 @@
+# Munki tasks - main.yml
+---
+- name: create munki group
+  group:
+    name: munki
+    system: yes
+
+- name: create munki user
+  user:
+    name: munki
+    comment: "Munki User"
+    group: munki
+    shell: /bin/bash
+    system: yes
+
+- name: add web user (www-data) to munki group
+  user:
+    name: www-data
+    group: munki
+
+- name: ufw - allow http/https connections
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - http
+    - https
+
+- name: install required packages - munki
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - apache2-utils
+    - build-essential
+    - curl
+    - git
+
+- name: include facts tasks
+  include: facts.yml
+
+- name: include nginx tasks
+  include: nginx.yml
+
+- name: create munki repo mount point
+  file:
+    path: /srv/munki-repo
+    state: directory
+    owner: root
+    group: munki
+    mode: 02744
+
+- name: symlink to munki repo
+  file:
+    src: /srv/munki-repo
+    dest: /usr/local/munki-repo
+    state: link
+
+- name: mount munki repo share
+  mount:
+    path: /srv/munki-repo
+    src: "{{ munki_repo_share }}"
+    fstype: "{{ munki_mount_fstype }}"
+    opts: "{{ munki_mount_options }}"
+    state: mounted
+
+- name: ensure web services are running
+  service:
+    name: nginx
+    state: started

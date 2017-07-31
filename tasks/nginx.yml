@@ -1,0 +1,30 @@
+# Munki tasks - nginx.yml
+---
+- name: apply nginx sites-available template
+  template:
+    src: "{{ ansible_local.munki.ssl.sites_available }}sites-available.munki.j2"
+    dest: /etc/nginx/sites-available/munki
+    owner: root
+    group: root
+    mode: 0644
+  register: munki_sites_available
+  notify:
+    - restart nginx
+
+- name: add munki to nginx sites-enabled
+  file:
+    src: /etc/nginx/sites-available/munki
+    dest: /etc/nginx/sites-enabled/munki
+    state: link
+  notify:
+    - restart nginx
+
+- name: modify nginx config file
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    regexp: '.*default_type application/octet-stream;'
+    line: '#default_type application/octet-stream;'
+  notify:
+    - restart nginx
+
+

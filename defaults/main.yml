@@ -1,0 +1,9 @@
+# Munki defaults - main.yml
+--- 
+munki_domain_name: "{{ ansible_local.ansible_default_ipv4.address }}"
+
+munki_mount_fstype: nfs
+
+munki_mount_options:
+
+munki_repo_share:
