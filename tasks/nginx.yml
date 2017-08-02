@@ -18,13 +18,3 @@
     state: link
   notify:
     - restart nginx
-
-- name: modify nginx config file
-  lineinfile:
-    path: /etc/nginx/nginx.conf
-    regexp: '.*default_type application/octet-stream;'
-    line: '#default_type application/octet-stream;'
-  notify:
-    - restart nginx
-
-
