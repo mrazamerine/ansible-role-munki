@@ -1,0 +1,55 @@
+# Munki tasks - mount.yml
+---
+- name: install required packages - mount cifs
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - cifs-utils
+  when: munki_mount_fstype == "cifs" or munki_mount_fstype == "smb"
+
+- name: install required packages - mount nfs
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nfs-common
+  when: munki_mount_fstype == "nfs"
+
+- name:  create munki mount credentials
+  template:
+    src: munki_mount_credentials.j2
+    dest: /root/.munki_mount_credentials
+    owner: root
+    group: root
+    mode: 0600
+
+- name: mount munki repo share
+  mount:
+    path: /srv/munki-repo
+    src: "{{ munki_repo_share }}"
+    fstype: cifs
+    opts: "{{ munki_mount_options }},credentials=/root/.munki_mount_credentials'"
+    state: mounted
+  when: munki_mount_fstype == "cifs" or munki_mount_fstype == "smb"
+  register: munki_repo_is_mounted
+
+- name: mount munki repo share
+  mount:
+    path: /srv/munki-repo
+    src: "{{ munki_repo_share }}"
+    fstype: nfs
+    opts: "{{ munki_mount_options }}"
+    state: mounted
+  when: munki_mount_fstype == "nfs"
+  register: munki_repo_is_mounted
+
+- name: mount munki repo share
+  mount:
+    path: /srv/munki-repo
+    src: "{{ munki_repo_share }}"
+    fstype: "{{ munki_mount_fstype }}"
+    opts: "{{ munki_mount_options }}"
+    state: mounted
+  when: munki_repo_is_mounted|skipped
+  register: munki_repo_is_mounted

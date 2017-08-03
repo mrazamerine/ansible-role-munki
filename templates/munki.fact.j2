@@ -25,3 +25,6 @@ echo config_installed=$(echo "$CONFIG_INSTALLED")
 
 echo [ssl]
 echo sites_available=$(echo "$SITES_AVAILABLE")
+
+echo [mount]
+echo mount_credentials=$( if "{{ munki_mount_username }}" == '' ; then echo ''; else echo ',credentials=/root/.munki_mount_credentials', fi)

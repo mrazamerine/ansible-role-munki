@@ -2,8 +2,8 @@
 --- 
 munki_domain_name: "{{ ansible_local.ansible_default_ipv4.address }}"
 
-munki_mount_fstype: nfs
+munki_mount_options: 
 
-munki_mount_options:
+munki_mount_username:
 
-munki_repo_share:
+munki_mount_password:
