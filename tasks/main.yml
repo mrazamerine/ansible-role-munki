@@ -62,6 +62,12 @@
     - munki_mount_fstype is defined
     - munki_repo_share is defined
 
+- name: include host tasks
+  include: host.yml
+  when:
+    - munki_repo_is_mounted|skipped
+    - munki_samba_password is defined
+
 - name: ensure web services are running
   service:
     name: nginx

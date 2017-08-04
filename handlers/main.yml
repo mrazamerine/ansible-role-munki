@@ -1,0 +1,6 @@
+# Munki handlers - main.yml
+---
+- name: restart smbd
+  service:
+    name: smbd
+    state: restarted

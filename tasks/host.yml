@@ -1,0 +1,71 @@
+# Munki tasks - host.yml
+---
+- name: ufw - allow samba connections
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - 137
+    - 138
+    - 139
+    - 445
+
+- name: install required packages - host munki repo (samba)
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - samba
+
+- name: create munki repo directory structure
+  file:
+    path: "/srv/munki-repo/{{ item }}"
+    state: directory
+    owner: root
+    group: munki
+    mode: 02744
+    recurse: yes
+  with_items:
+    - catalogs
+    - client_resources
+    - icons
+    - manifests
+    - pkgs
+    - pkgsinfo
+
+- name: set minimum smb version
+  lineinfile:
+    path: /etc/samba/smb.conf
+    insertafter: '^\[global\]'
+    line: 'min protocol = SMB2'
+  notify:
+    - restart smbd
+
+- name: Create Samba Password for User(s)
+  shell: "(echo {{ munki_samba_password }}; echo {{ munki_samba_password }}) | smbpasswd -s -a munki"
+  notify:
+    - restart smbd
+
+- name:
+  blockinfile:
+    path: /etc/samba/smb.conf
+    marker: "# {mark} MUNKI REPO SHARE"
+    insertafter: EOF
+    block: |
+
+      [munki-repo]
+        path = /srv/munki-repo
+        available = yes
+        valid users = munki
+        read only = no
+        browseable = yes
+        public = no
+        writable = yes
+
+  notify:
+    - restart smbd
+
+- name: ensure samba services are running
+  service:
+    name: smbd
+    state: started

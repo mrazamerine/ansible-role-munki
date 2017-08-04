@@ -1,6 +1,6 @@
 # Munki tasks - mount.yml
 ---
-- name: install required packages - mount cifs
+- name: install required packages - mount munki repo (cifs)
   apt:
     name: "{{ item }}"
     state: latest
@@ -8,7 +8,7 @@
     - cifs-utils
   when: munki_mount_fstype == "cifs" or munki_mount_fstype == "smb"
 
-- name: install required packages - mount nfs
+- name: install required packages - mount munki repo (nfs)
   apt:
     name: "{{ item }}"
     state: latest
@@ -24,7 +24,7 @@
     group: root
     mode: 0600
 
-- name: mount munki repo share
+- name: mount munki repo share (cifs)
   mount:
     path: /srv/munki-repo
     src: "{{ munki_repo_share }}"
@@ -34,7 +34,7 @@
   when: munki_mount_fstype == "cifs" or munki_mount_fstype == "smb"
   register: munki_repo_is_mounted
 
-- name: mount munki repo share
+- name: mount munki repo share (nfs)
   mount:
     path: /srv/munki-repo
     src: "{{ munki_repo_share }}"
@@ -44,7 +44,7 @@
   when: munki_mount_fstype == "nfs"
   register: munki_repo_is_mounted
 
-- name: mount munki repo share
+- name: mount munki repo share (other)
   mount:
     path: /srv/munki-repo
     src: "{{ munki_repo_share }}"
