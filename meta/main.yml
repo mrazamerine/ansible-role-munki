@@ -1,5 +1,0 @@
-# Munk meta - main.yml
----
-dependencies:
-  - { role: ufw }
-  - { role: nginx }

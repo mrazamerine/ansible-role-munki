@@ -23,7 +23,7 @@
     state: directory
     owner: root
     group: munki
-    mode: 02744
+    mode: 02750
     recurse: yes
   with_items:
     - catalogs
@@ -41,8 +41,19 @@
   notify:
     - restart smbd
 
-- name: Create Samba Password for User(s)
+- name: create munki samba credentials
+  template:
+    src: samba_munki_credentials.j2
+    dest: /root/.samba_munki_credentials
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+  register: samba_munki_credentials
+
+- name: set samba password for munki user
   shell: "(echo {{ munki_samba_password }}; echo {{ munki_samba_password }}) | smbpasswd -s -a munki"
+  when: samba_munki_credentials|changed
   notify:
     - restart smbd
 
