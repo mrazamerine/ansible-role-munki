@@ -26,6 +26,7 @@ server {
         
         location /munki-repo/ {
             autoindex off;
+            {{ munki_http_auth_config }}
         }
         
 }

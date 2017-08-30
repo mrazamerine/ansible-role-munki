@@ -1,5 +1,22 @@
 # Munki tasks - nginx.yml
 ---
+- name: enable http authorization in nginx sites-available
+  set_fact:
+    munki_http_auth_config: |
+      auth_basic "Restricted – Munki Repo";
+                  auth_basic_user_file /etc/nginx/.munki_htpasswd;
+  when: munki_http_password is defined
+
+- name: create munki http authorization file
+  htpasswd:
+    path: /etc/nginx/.munki_htpasswd
+    name: munki
+    password: "{{ munki_http_password }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  when: munki_http_password is defined
+
 - name: apply nginx sites-available template
   template:
     src: "{{ ansible_local.munki.security.ssl }}.sites-available.munki.j2"

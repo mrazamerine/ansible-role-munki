@@ -27,6 +27,7 @@
     - build-essential
     - curl
     - git
+    - python-passlib
 
 - name: include facts tasks
   include: facts.yml

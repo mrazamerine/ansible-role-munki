@@ -16,6 +16,15 @@ SSL=$(
     fi
 )
 
+HTTPAUTH=$(
+    if grep -q 'auth_basic_user_file /etc/nginx/.munki_htpasswd;' "/etc/nginx/sites-available/munki"
+    then
+        echo 'True'
+    else
+        echo 'False'
+    fi
+)
+
 
 # Facts
 
@@ -25,6 +34,7 @@ echo config_installed=$(echo "$CONFIG_INSTALLED")
 
 echo [security]
 echo ssl=$(echo "$SSL")
+echo http_auth=$(echo $HTTPAUTH)
 
 echo [mount]
 echo mount_credentials=$( if "{{ munki_mount_username }}" == '' ; then echo ''; else echo ',credentials=/root/.munki_mount_credentials', fi)

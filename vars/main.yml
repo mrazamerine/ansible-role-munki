@@ -1,0 +1,3 @@
+# Munki vars - main.yml
+---
+munki_http_auth_config:
