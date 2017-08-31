@@ -29,10 +29,9 @@
     path: /srv/munki-repo
     src: "{{ munki_repo_share }}"
     fstype: cifs
-    opts: "{{ munki_mount_options }},credentials=/root/.munki_mount_credentials'"
+    opts: "credentials=/root/.munki_mount_credentials,{{ munki_mount_options }}"
     state: mounted
   when: munki_mount_fstype == "cifs" or munki_mount_fstype == "smb"
-  register: munki_repo_is_mounted
 
 - name: mount munki repo share (nfs)
   mount:
@@ -42,7 +41,6 @@
     opts: "{{ munki_mount_options }}"
     state: mounted
   when: munki_mount_fstype == "nfs"
-  register: munki_repo_is_mounted
 
 - name: mount munki repo share (other)
   mount:
@@ -51,5 +49,7 @@
     fstype: "{{ munki_mount_fstype }}"
     opts: "{{ munki_mount_options }}"
     state: mounted
-  when: munki_repo_is_mounted|skipped
-  register: munki_repo_is_mounted
+  when:
+    - munki_mount_fstype != "cifs"
+    - munki_mount_fstype != "smb"
+    - munki_mount_fstype != "nfs"
