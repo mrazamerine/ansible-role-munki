@@ -51,16 +51,6 @@
 
 - name: include mount tasks
   include: mount.yml
-  when:
-    - munki_mount_fstype is defined
-    - munki_repo_share is defined
-  register: mount_munki_repo
-
-- name: include host tasks
-  include: host.yml
-  when:
-    - mount_munki_repo|skipped
-    - munki_samba_password is defined
 
 - name: ensure web services are running
   service:
