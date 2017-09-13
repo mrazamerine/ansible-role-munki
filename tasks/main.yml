@@ -46,7 +46,7 @@
 - name: symlink to munki repo
   file:
     src: /srv/munki-repo
-    dest: /usr/local/munki-repo
+    dest: /usr/share/nginx/html/munki-repo
     state: link
 
 - name: include mount tasks
