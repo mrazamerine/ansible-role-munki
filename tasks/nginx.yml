@@ -2,9 +2,8 @@
 ---
 - name: enable http authorization in nginx sites-available
   set_fact:
-    munki_http_auth_config: |
-      auth_basic "Restricted – Munki Repo";
-                  auth_basic_user_file /etc/nginx/.munki_htpasswd;
+    munki_http_auth_basic: auth_basic "Restricted – Munki Repo";
+    munki_http_auth_basic_user_file: auth_basic_user_file /etc/nginx/.munki_htpasswd;
   when: munki_http_password is defined
 
 - name: create munki http authorization file
