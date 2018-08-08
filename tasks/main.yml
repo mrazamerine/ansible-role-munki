@@ -49,9 +49,6 @@
     dest: /usr/share/nginx/html/munki-repo
     state: link
 
-- name: include mount tasks
-  include: mount.yml
-
 - name: ensure web services are running
   service:
     name: nginx
