@@ -29,13 +29,10 @@
     - git
     - python-passlib
 
-- name: include facts tasks
-  include: facts.yml
-
 - name: include nginx tasks
   include: nginx.yml
 
-- name: create munki repo mount point
+- name: create munki repo directory
   file:
     path: /srv/munki-repo
     state: directory
