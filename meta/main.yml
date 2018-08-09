@@ -1,0 +1,4 @@
+# Munki meta - main.yml
+---
+dependencies:
+  - { role: nginx }
