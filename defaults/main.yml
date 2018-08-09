@@ -1,0 +1,3 @@
+# Munki defaults - main.yml
+---
+munki_keepalive_timeout: 300

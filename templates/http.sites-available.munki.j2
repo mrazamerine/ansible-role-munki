@@ -8,6 +8,8 @@ server {
         root /usr/share/nginx/html;
         index index.php index.html index.htm;
 
+        keepalive_timeout {{ munki_keepalive_timeout }}s;
+
         location /munki-repo/ {
             autoindex off;
             {{ munki_http_auth_basic }}
