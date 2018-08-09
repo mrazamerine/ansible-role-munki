@@ -1,4 +1,4 @@
-# Ansible role – LetsEncrypt-DNS
+# Ansible role – Munki
 
 Ansible role for setting up a [munki](https://github.com/munki/munki) server.
 
