@@ -18,7 +18,7 @@ server {
         
         server_name {{ munki_domain_name }};
         
-        include snippets/ssl-{{ munki_domain_name }}.conf;
+        include snippets/ssl-munki.conf;
         include /etc/nginx/snippets/ssl-nginx-params.conf;
         
         root /usr/share/nginx/html;
