@@ -48,7 +48,7 @@
     owner: root
     group: root
     mode: 0644
-  when: munki_sites_available_https.skipped
+  when: munki_sites_available_https is skipped
   register: munki_sites_available_http
   notify:
     - restart nginx
